@@ -1,59 +1,40 @@
-
-import { useState } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import Modal from "../../../components/pages/homepage/ui/modal";
 import { FaWhatsapp, FaEnvelope, FaInstagram, FaTiktok, FaYoutube } from "react-icons/fa";
 
-const kategoriList = [
-  { id: 1, nama_kategori: "Teknologi Digital" },
-  { id: 2, nama_kategori: "Otomotif" },
-  { id: 3, nama_kategori: "Lifestyle" },
-  { id: 4, nama_kategori: "Kesehatan" },
-  { id: 5, nama_kategori: "Pendidikan" },
-  { id: 6, nama_kategori: "Makanan & Minuman" },
-  { id: 7, nama_kategori: "Olahraga" },
-  { id: 8, nama_kategori: "Properti" },
-  { id: 9, nama_kategori: "Profil & Portofolio" },
-  { id: 10, nama_kategori: "Media Publikasi" },
-  { id: 11, nama_kategori: "Traveling" },
-];
-
-const produkList = [
-  {
-    id: 1,
-    kategori_id: 1,
-    nama_produk: "Digital Store Website",
-    gambar_produk: "sampul_digital.png",
-  },
-  {
-    id: 2,
-    kategori_id: 4,
-    nama_produk: "Skincare Beauty Website",
-    gambar_produk: "sampul_bakery.png",
-  },
-  {
-    id: 3,
-    kategori_id: 2,
-    nama_produk: "Automotive Website",
-    gambar_produk: "sampul_digital.png",
-  },
-  {
-    id: 4,
-    kategori_id: 1,
-    nama_produk: "Digital Store 2 Website",
-    gambar_produk: "sampul_digital.png",
-  },
-];
-
 export default function Produk() {
-    const [modalLogin, setModalLogin] = useState(false);
-    const [modalRegister, setModalRegister] = useState(false);
-    const [activeKategori, setActiveKategori] = useState(1);
-    
-    const filteredProduk = produkList.filter(
-        (item) => item.kategori_id === activeKategori
-    );
-      
+  const [kategori, setKategori] = useState<any>([]);
+  const [produk, setProduk] = useState<any>([]);
+  const [modalLogin, setModalLogin] = useState(false);
+  const [modalRegister, setModalRegister] = useState(false);
+
+
+  useEffect(() => {
+
+    const fetchKategori = async () => {
+      try {
+        const response = await axios.get("http://localhost:3000/kategori");
+        setKategori(response.data);
+      } catch (error) {
+        console.log("Error fetching Kategori:", error);
+      }
+    }
+    fetchKategori();
+
+    const fetchProduk = async () => {
+      try {
+        const response = await axios.get("http://127.0.0.1:3000/produk");
+        setProduk(response.data);
+        console.log("Fetched Data:", response.data);
+      } catch (error) {
+        console.log("Error fetching data:", error);
+      }
+    }
+    fetchProduk();
+  }, []);
+
     return (
         <main>
             {/* Modal */}
@@ -198,74 +179,29 @@ export default function Produk() {
 
                     <div className="bg-white shadow-md col-span-3 mb-10 mt-10 p-6">
                         <h5 className="font-bold mb-3">Filter Kategori</h5>
-                        <div className="form-check mb-2">
-                            <input className="form-check-input filter-checkbox" type="checkbox" value="0" id="kategori1" />
-                            <label className="form-check-label"> Teknologi</label>
-                        </div>
-                        <div className="form-check mb-2">
-                            <input className="form-check-input filter-checkbox" type="checkbox" value="0" id="kategori1" />
-                            <label className="form-check-label"> Teknologi</label>
-                        </div>
-                        <div className="form-check mb-2">
-                            <input className="form-check-input filter-checkbox" type="checkbox" value="0" id="kategori1" />
-                            <label className="form-check-label"> Teknologi</label>
-                        </div>
-                        <div className="form-check mb-2">
-                            <input className="form-check-input filter-checkbox" type="checkbox" value="0" id="kategori1" />
-                            <label className="form-check-label"> Teknologi</label>
-                        </div>
-                        <div className="form-check mb-2">
-                            <input className="form-check-input filter-checkbox" type="checkbox" value="0" id="kategori1" />
-                            <label className="form-check-label"> Teknologi</label>
-                        </div>
+                        {kategori.map((item) => (
+                            <div className="form-check mb-2">
+                                <input className="form-check-input filter-checkbox" type="checkbox" value="0" id={`kategori${item.id}`} />
+                                <label className="form-check-label"> {item.nama_kategori} </label>
+                            </div>
+                        ))}
                     </div>
 
                     <div className="col-span-9">
                         <div className="grid grid-cols-12 gap-4">
-                            <div className="col-span-6">
-                                <div className="bg-white shadow-md rounded-lg overflow-hidden">
-                                    <img src="/images/produk/sampul_bakery.png" alt="" className="w-full object-cover" />
-                                    <div className="p-4">
-                                    <h5 className="font-semibold text-lg">Digital Store Website</h5>
-                                    <a href="" className="inline-block mt-3 px-4 py-2 text-sm border border-blue-500 text-blue-500 rounded hover:bg-blue-500 hover:text-white transition">
-                                        Preview
-                                    </a>
+                            {produk.map((item) => (
+                                <div className="col-span-6">
+                                    <div className="bg-white shadow-md rounded-lg overflow-hidden">
+                                        <img src={`public/images/produk/${item.gambar_produk}`} alt="" className="w-full object-cover" />
+                                        <div className="p-4">
+                                        <h5 className="font-semibold text-lg">{item.nama_produk}</h5>
+                                        <a href="" className="inline-block mt-3 px-4 py-2 text-sm border border-blue-500 text-blue-500 rounded hover:bg-blue-500 hover:text-white transition">
+                                            Preview
+                                        </a>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div className="col-span-6">
-                                <div className="bg-white shadow-md rounded-lg overflow-hidden">
-                                    <img src="/images/produk/sampul_bakery.png" alt="" className="w-full object-cover" />
-                                    <div className="p-4">
-                                    <h5 className="font-semibold text-lg">Digital Store Website</h5>
-                                    <a href="" className="inline-block mt-3 px-4 py-2 text-sm border border-blue-500 text-blue-500 rounded hover:bg-blue-500 hover:text-white transition">
-                                        Preview
-                                    </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-span-6">
-                                <div className="bg-white shadow-md rounded-lg overflow-hidden">
-                                    <img src="/images/produk/sampul_bakery.png" alt="" className="w-full object-cover" />
-                                    <div className="p-4">
-                                    <h5 className="font-semibold text-lg">Digital Store Website</h5>
-                                    <a href="" className="inline-block mt-3 px-4 py-2 text-sm border border-blue-500 text-blue-500 rounded hover:bg-blue-500 hover:text-white transition">
-                                        Preview
-                                    </a>
-                                    </div>
-                                </div>
-                            </div>
-                            <div className="col-span-6">
-                                <div className="bg-white shadow-md rounded-lg overflow-hidden">
-                                    <img src="/images/produk/sampul_bakery.png" alt="" className="w-full object-cover" />
-                                    <div className="p-4">
-                                    <h5 className="font-semibold text-lg">Digital Store Website</h5>
-                                    <a href="" className="inline-block mt-3 px-4 py-2 text-sm border border-blue-500 text-blue-500 rounded hover:bg-blue-500 hover:text-white transition">
-                                        Preview
-                                    </a>
-                                    </div>
-                                </div>
-                            </div>
+                            ))}
                         </div>
                     </div>
 
