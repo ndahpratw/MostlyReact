@@ -22,7 +22,7 @@ export default function Layanan() {
 
     const fetchData = async () => {
       try {
-        const response = await axios.get("http://127.0.0.1:3000/layanan");
+        const response = await axios.get("http://127.0.0.1:3000/benefit");
         setSubpaket(response.data);
         console.log("Fetched Data:", response.data);
       } catch (error) {

@@ -1,4 +1,52 @@
 {
+    "profil":[
+        {
+            "img": "profil-section1.png",
+            "title": "Desain Modern",
+            "desc": "Website dengan desain profesional & menarik sesuai trend.",
+            "bg": "bg-red-300"
+        },
+        {
+            "img": "profil-section2.png",
+            "title": "Dipercaya Banyak Customer",
+            "desc": "Telah melayani ratusan customer dari berbagai industri dan kebutuhan.",
+            "bg": "bg-sky-500"
+        },
+        {
+            "img": "profil-section3.png",
+            "title": "Desain Bervariasi",
+            "desc": "Tersedia berbagai template website siap pakai yang dapat disesuaikan.",
+            "bg": "bg-yellow-200"
+        },
+        {
+            "img": "profil-section4.png",
+            "title": "Maintenance",
+            "desc": "Kami siap membantu & memberikan layanan purna jual.",
+            "bg": "bg-light-500"
+        }
+    ],
+    "layanan": [
+        {
+            "id": "layanan1",
+            "title": "Pembuatan Website",
+            "content": "Kami membangun website modern, responsif, dan SEO friendly untuk mendukung pertumbuhan bisnis Anda."
+        },
+        {
+            "id": "layanan2",
+            "title": "Hosting & Server",
+            "content": "Layanan hosting cepat, aman, dan stabil untuk menjaga website Anda selalu online tanpa hambatan."
+        },
+        {
+            "id": "layanan3",
+            "title": "Desain UI/UX",
+            "content": "Desain antarmuka modern yang menarik dan mudah digunakan untuk meningkatkan pengalaman pengguna."
+        },
+        {
+            "id": "layanan4",
+            "title": "Maintenance & Support",
+            "content": "Dukungan teknis dan pemeliharaan rutin agar website Anda tetap optimal dan bebas dari masalah."
+        }
+    ],
     "paket": [
         {
             "id": 1,
@@ -13,7 +61,7 @@
             "nama_paket": "Desain"
         }
     ],
-    "layanan": [
+    "benefit": [
         {
             "id": 1,
             "paket_id": 1,
@@ -168,6 +216,41 @@
             ]
         }
     ],
+    "kategori": [
+        { 
+            "id": 1, 
+            "nama_kategori": "Teknologi Digital" },
+        { 
+            "id": 2, 
+            "nama_kategori": "Otomotif" },
+        { 
+            "id": 3, 
+            "nama_kategori": "Lifestyle" },
+        { 
+            "id": 4, 
+            "nama_kategori": "Kesehatan" },
+        { 
+            "id": 5, 
+            "nama_kategori": "Pendidikan" },
+        { 
+            "id": 6, 
+            "nama_kategori": "Makanan & Minuman" },
+        { 
+            "id": 7, 
+            "nama_kategori": "Olahraga" },
+        { 
+            "id": 8, 
+            "nama_kategori": "Properti" },
+        { 
+            "id": 9, 
+            "nama_kategori": "Profil & Portofolio" },
+        { 
+            "id": 10,
+            "nama_kategori": "Media Publikasi" },
+        { 
+            "id": 11,
+            "nama_kategori": "Traveling" }
+    ],
     "produk": [
         {
             "id": 1,
@@ -192,6 +275,60 @@
             "kategori_id": 1,
             "nama_produk": "Digital Store 2 Website",
             "gambar_produk": "sampul_digital.png"
+        }
+    ],
+    "testimoni": [
+        {
+            "id": 1,
+            "nama": "Andi Wijaya",
+            "gambar": "public/images/admin.jpg",
+            "rating": 5,
+            "ulasan": "Pelayanan cepat dan hasil websitenya memuaskan"
+        },
+        {
+            "id": 2,
+            "nama": "Siti Rahma",
+            "gambar": "public/images/admin.jpg",
+            "rating": 4,
+            "ulasan": "Tampilan website sangat menarik dan mudah digunakan"
+        },
+        {
+            "id": 3,
+            "nama": "Budi Santoso",
+            "gambar": "public/images/admin.jpg",
+            "rating": 5,
+            "ulasan": "Support 24/7 benar-benar membantu bisnis saya"
+        },
+        {
+            "id": 4,
+            "nama": "Budi Santoso",
+            "gambar": "public/images/admin.jpg",
+            "rating": 5,
+            "ulasan": "Support 24/7 benar-benar membantu bisnis saya"
+        },
+        {
+            "id": 5,
+            "nama": "Budi Santoso",
+            "gambar": "public/images/admin.jpg",
+            "rating": 5,
+            "ulasan": "Support 24/7 benar-benar membantu bisnis saya"
+        }
+    ],
+    "kontak":[
+        {
+            "id": 1,
+            "pertanyaan": "Berapa lama waktu pembuatan website?",
+            "jawaban": "Biasanya sekitar 2–4 minggu tergantung kompleksitas website."
+        },
+        {
+            "id": 2,
+            "pertanyaan": "Apakah bisa request desain custom?",
+            "jawaban": "Ya, kami bisa menyesuaikan desain sesuai kebutuhan bisnis Anda."
+        },
+        {
+            "id": 3,
+            "pertanyaan": "Apakah ada layanan maintenance?",
+            "jawaban": "Tentu, kami menyediakan paket maintenance bulanan."
         }
     ]
 }

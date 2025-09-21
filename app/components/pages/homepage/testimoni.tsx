@@ -1,56 +1,28 @@
 "use client";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/pagination";
 
-type TestimoniType = {
-  id: number;
-  nama: string;
-  gambar: string;
-  rating: number;
-  ulasan: string;
-};
-
-const dataTestimoni: TestimoniType[] = [
-  {
-    id: 1,
-    nama: "Andi Wijaya",
-    gambar: "public/images/admin.jpg",
-    rating: 5,
-    ulasan: "Pelayanan cepat dan hasil websitenya memuaskan",
-  },
-  {
-    id: 2,
-    nama: "Siti Rahma",
-    gambar: "public/images/admin.jpg",
-    rating: 4,
-    ulasan: "Tampilan website sangat menarik dan mudah digunakan",
-  },
-  {
-    id: 3,
-    nama: "Budi Santoso",
-    gambar: "public/images/admin.jpg",
-    rating: 5,
-    ulasan: "Support 24/7 benar-benar membantu bisnis saya",
-  },
-  {
-    id: 4,
-    nama: "Budi Santoso",
-    gambar: "public/images/admin.jpg",
-    rating: 5,
-    ulasan: "Support 24/7 benar-benar membantu bisnis saya",
-  },
-  {
-    id: 5,
-    nama: "Budi Santoso",
-    gambar: "public/images/admin.jpg",
-    rating: 5,
-    ulasan: "Support 24/7 benar-benar membantu bisnis saya",
-  },
-];
-
 export default function Testimoni() {
+
+  const [dataTestimoni, setDataTestimoni] = useState<any>([]);
+
+  useEffect(() => {
+
+    const fetchTestimoni = async () => {
+      try {
+        const response = await axios.get("http://localhost:3000/testimoni");
+        setDataTestimoni(response.data);
+      } catch (error) {
+        console.log("Error fetching Testimoni:", error);
+      }
+    }
+    fetchTestimoni();
+  }, []);
+
   return (
     <>
         <div className="max-w-5xl mx-auto">

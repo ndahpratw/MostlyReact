@@ -1,57 +1,44 @@
-import { useState } from "react";
-
-const kategoriList = [
-  { id: 1, nama_kategori: "Teknologi Digital" },
-  { id: 2, nama_kategori: "Otomotif" },
-  { id: 3, nama_kategori: "Lifestyle" },
-  { id: 4, nama_kategori: "Kesehatan" },
-  { id: 5, nama_kategori: "Pendidikan" },
-  { id: 6, nama_kategori: "Makanan & Minuman" },
-  { id: 7, nama_kategori: "Olahraga" },
-  { id: 8, nama_kategori: "Properti" },
-  { id: 9, nama_kategori: "Profil & Portofolio" },
-  { id: 10, nama_kategori: "Media Publikasi" },
-  { id: 11, nama_kategori: "Traveling" },
-];
-
-const produkList = [
-  {
-    id: 1,
-    kategori_id: 1,
-    nama_produk: "Digital Store Website",
-    gambar_produk: "sampul_digital.png",
-  },
-  {
-    id: 2,
-    kategori_id: 4,
-    nama_produk: "Skincare Beauty Website",
-    gambar_produk: "sampul_bakery.png",
-  },
-  {
-    id: 3,
-    kategori_id: 2,
-    nama_produk: "Automotive Website",
-    gambar_produk: "sampul_digital.png",
-  },
-  {
-    id: 4,
-    kategori_id: 1,
-    nama_produk: "Digital Store 2 Website",
-    gambar_produk: "sampul_digital.png",
-  },
-];
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 export default function Produk() {
+  const [kategori, setKategori] = useState<any>([]);
+  const [produk, setProduk] = useState<any>([]);
   const [activeKategori, setActiveKategori] = useState(1);
-
-  const filteredProduk = produkList.filter(
+  const filteredProduk = produk.filter(
     (item) => item.kategori_id === activeKategori
   );
+
+  useEffect(() => {
+
+    const fetchKategori = async () => {
+      try {
+        const response = await axios.get("http://localhost:3000/kategori");
+        setKategori(response.data);
+      } catch (error) {
+        console.log("Error fetching Kategori:", error);
+      }
+    }
+    fetchKategori();
+
+    const fetchProduk = async () => {
+      try {
+        const response = await axios.get("http://127.0.0.1:3000/produk");
+        setProduk(response.data);
+        console.log("Fetched Data:", response.data);
+      } catch (error) {
+        console.log("Error fetching data:", error);
+      }
+    }
+    fetchProduk();
+  }, []);
+
+
 
   return (
     <>    
         <div className="flex justify-center flex-wrap gap-6 mb-10 mt-10">
-          {kategoriList.map((item) => (
+          {kategori.map((item) => (
             <div key={item.id} onClick={() => setActiveKategori(item.id)} className={`w-[70px] h-[200px] border-2 border-gray-300 flex items-center justify-center cursor-pointer font-semibold transition-all writing-mode-vertical-rl rotate-180 ${
                 activeKategori === item.id
                   ? "bg-orange-500 text-white"
@@ -61,7 +48,7 @@ export default function Produk() {
               {item.nama_kategori}
             </div>
           ))}
-          <a href="/desain-produk" className="w-[70px] h-[200px] flex items-center justify-center font-semibold bg-blue-500 text-white text-center cursor-pointer transition-all rotate-180" style={{ writingMode: "vertical-rl" }}>
+          <a href="/produk" className="w-[70px] h-[200px] flex items-center justify-center font-semibold bg-blue-500 text-white text-center cursor-pointer transition-all rotate-180" style={{ writingMode: "vertical-rl" }}>
             Selengkapnya
           </a>
         </div>

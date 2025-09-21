@@ -9,13 +9,13 @@
   --font-poppins: Poppins, sans-serif;
 }
 
-.slide-track {
+/* .slide-track {
   display: flex;
   width: calc(250px * 14);
   animation: scroll 30s linear infinite;
-}
+} */
 
-@keyframes scroll {
+/* @keyframes scroll {
   0% {
     transform: translateX(0);
   }
@@ -23,4 +23,4 @@
   100% {
     transform: translateX(-50%);
   }
-}
+} */

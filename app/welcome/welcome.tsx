@@ -1,4 +1,5 @@
-import { useState } from "react";
+import axios from "axios";
+import { useEffect, useState } from "react";
 import Modal from "../components/pages/homepage/ui/modal";
 import Profil from "../components/pages/homepage/profil";
 import Layanan from "../components/pages/homepage/layanan";
@@ -13,56 +14,40 @@ const tampilkanModalLogin = (setModalLogin: any) => {
   setModalLogin(true);
 };
 
-const accordionItems = [
-  {
-    id: "layanan1",
-    title: "Pembuatan Website",
-    content:
-      "Kami membangun website modern, responsif, dan SEO friendly untuk mendukung pertumbuhan bisnis Anda.",
-  },
-  {
-    id: "layanan2",
-    title: "Hosting & Server",
-    content:
-      "Layanan hosting cepat, aman, dan stabil untuk menjaga website Anda selalu online tanpa hambatan.",
-  },
-  {
-    id: "layanan3",
-    title: "Desain UI/UX",
-    content:
-      "Desain antarmuka modern yang menarik dan mudah digunakan untuk meningkatkan pengalaman pengguna.",
-  },
-  {
-    id: "layanan4",
-    title: "Maintenance & Support",
-    content:
-      "Dukungan teknis dan pemeliharaan rutin agar website Anda tetap optimal dan bebas dari masalah.",
-  },
-];
 
-const accordionKontak = [
-  {
-    id: 1,
-    pertanyaan: "Berapa lama waktu pembuatan website?",
-    jawaban: "Biasanya sekitar 2–4 minggu tergantung kompleksitas website.",
-  },
-  {
-    id: 2,
-    pertanyaan: "Apakah bisa request desain custom?",
-    jawaban: "Ya, kami bisa menyesuaikan desain sesuai kebutuhan bisnis Anda.",
-  },
-  {
-    id: 3,
-    pertanyaan: "Apakah ada layanan maintenance?",
-    jawaban: "Tentu, kami menyediakan paket maintenance bulanan.",
-  },
-];
+
 
 export function Welcome() {
   const [modalLogin, setModalLogin] = useState(false);
   const [modalRegister, setModalRegister] = useState(false);
+  const [accordionItems, setAccordionItems] = useState<any>([]);
   const [activeAccordion, setActiveAccordion] = useState("layanan1");
+  const [accordionKontak, setAccordionKontak] = useState<any>([]);
   const [activeKontak, setActiveKontak] = useState("kontak1");
+  
+  useEffect(() => {
+
+    const fetchLayanan = async () => {
+      try {
+        const response = await axios.get("http://localhost:3000/layanan");
+        setAccordionItems(response.data);
+      } catch (error) {
+        console.log("Error fetching layanan:", error);
+      }
+    }
+    fetchLayanan();
+
+    const fetchKontak = async () => {
+      try {
+        const response = await axios.get("http://127.0.0.1:3000/kontak");
+        setAccordionKontak(response.data);
+        console.log("Fetched Data:", response.data);
+      } catch (error) {
+        console.log("Error fetching kontak:", error);
+      }
+    }
+    fetchKontak();
+  }, []);
 
   return (
     <main>
@@ -272,79 +257,15 @@ export function Welcome() {
         </section>
 
         {/* Tools */}
-        <section className="bg-white mt-55 py-12 overflow-hidden relative">
-          <div className="slide-track flex space-x-20">
-            <img
-              src="../../public/images/logo/html.png"
-              alt="HTML"
-              className="h-16 w-auto"
-            />
-            <img
-              src="../../public/images/logo/css.png"
-              alt="CSS"
-              className="h-16 w-auto"
-            />
-            <img
-              src="../../public/images/logo/javascript.png"
-              alt="JavaScript"
-              className="h-16 w-auto"
-            />
-            <img
-              src="../../public/images/logo/react.png"
-              alt="React"
-              className="h-16 w-auto"
-            />
-            <img
-              src="../../public/images/logo/tailwind.png"
-              alt="Tailwind"
-              className="h-16 w-auto"
-            />
-            <img
-              src="../../public/images/logo/typescript.png"
-              alt="Typescript"
-              className="h-16 w-auto"
-            />
-            <img
-              src="../../public/images/logo/laravel.png"
-              alt="Laravel"
-              className="h-16 w-auto"
-            />
-
-            <img
-              src="../../public/images/logo/html.png"
-              alt="HTML"
-              className="h-16 w-auto"
-            />
-            <img
-              src="../../public/images/logo/css.png"
-              alt="CSS"
-              className="h-16 w-auto"
-            />
-            <img
-              src="../../public/images/logo/javascript.png"
-              alt="JavaScript"
-              className="h-16 w-auto"
-            />
-            <img
-              src="../../public/images/logo/react.png"
-              alt="React"
-              className="h-16 w-auto"
-            />
-            <img
-              src="../../public/images/logo/tailwind.png"
-              alt="Tailwind"
-              className="h-16 w-auto"
-            />
-            <img
-              src="../../public/images/logo/typescript.png"
-              alt="Typescript"
-              className="h-16 w-auto"
-            />
-            <img
-              src="../../public/images/logo/laravel.png"
-              alt="Laravel"
-              className="h-16 w-auto"
-            />
+        <section className="bg-white mt-55 px-25 py-12 overflow-hidden relative">
+          <div className="slide-track flex justify-between space-x-20">
+            <img src="../../public/images/logo/html.png" alt="HTML" className="h-16 w-auto"/>
+            <img src="../../public/images/logo/css.png" alt="CSS" className="h-16 w-auto"/>
+            <img src="../../public/images/logo/javascript.png" alt="JavaScript" className="h-16 w-auto"/>
+            <img src="../../public/images/logo/react.png" alt="React" className="h-16 w-auto"/>
+            <img src="../../public/images/logo/tailwind.png" alt="Tailwind" className="h-16 w-auto"/>
+            <img src="../../public/images/logo/typescript.png" alt="Typescript" className="h-16 w-auto"/>
+            <img src="../../public/images/logo/laravel.png" alt="Laravel" className="h-16 w-auto"/>
           </div>
         </section>
 
