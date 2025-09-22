@@ -107,11 +107,7 @@ export function Welcome() {
         </div>
       </Modal>
 
-      <Modal
-        show={modalRegister}
-        setter={setModalRegister}
-        modalName="Modal Register"
-      >
+      <Modal show={modalRegister} setter={setModalRegister} modalName="Modal Register">
         <div className="form font-poppins">
           <h1 className="font-extrabold text-center mb-4 mt-2">
             <span className="text-blue-500 text-[20px]">Mostly</span>

@@ -3,20 +3,19 @@ import { useEffect, useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import Modal from "../homepage/ui/modal";
 import { FaWhatsapp, FaEnvelope, FaInstagram, FaTiktok, FaYoutube } from "react-icons/fa";
+import { useSearchParams } from "react-router";
 
 export default function Produk() {
+const[searchParams, setSearchParams] = useSearchParams();
   const [kategori, setKategori] = useState<any>([]);
   const [activeKategori, setActiveKategori] = useState(1);
   const [produk, setProduk] = useState<any>([]);
-  const filteredProduk = produk.filter(
-    (item) => item.kategori_id === activeKategori
-  );
+  const filteredProduk = searchParams.getAll("filter").length > 0 ? produk.filter((item:any) => searchParams.getAll("filter").includes(String(item.kategori_id))) : produk;
+  
   const [modalLogin, setModalLogin] = useState(false);
   const [modalRegister, setModalRegister] = useState(false);
 
-
   useEffect(() => {
-
     const fetchKategori = async () => {
       try {
         const response = await axios.get("http://localhost:3000/kategori");
@@ -38,6 +37,23 @@ export default function Produk() {
     }
     fetchProduk();
   }, []);
+
+  const handleFilterChange = (id: number) => {
+    // note : filter dan search tu ntar nampil di urlnya, jadi bebas diganti
+    let ids = searchParams.getAll("filter");
+    const search = searchParams.get("search") || "";
+
+    if (ids.includes(id.toString())) {
+      ids = ids.filter((item) => item !== id.toString());
+    } else {
+      ids.push(id.toString());
+    }
+    setSearchParams({
+          search:search || "",
+          filter:ids
+      });
+  }
+
 
     return (
         <main>
@@ -183,15 +199,11 @@ export default function Produk() {
 
                     <div className="bg-white shadow-md col-span-3 mb-10 mt-10 p-6">
                         <h5 className="font-bold mb-3">Filter Kategori</h5>
-                        {kategori.map((item) => (
+                        {kategori.map((item:any) => (
                             <div className="form-check mb-2" key={item.id}>
-                                <input
-                                    className="form-check-input filter-checkbox"
-                                    type="radio"
-                                    name="kategori"
-                                    id={`kategori${item.id}`}
-                                    checked={activeKategori === item.id}
-                                    onChange={() => setActiveKategori(item.id)}
+                                <input type="checkbox" name="kategori" id={`kategori${item.id}`}
+                                    checked={searchParams.getAll("filter").includes(String(item.id))}
+                                    onChange={() => handleFilterChange(Number(item.id))}
                                 />
                                 <label className="form-check-label" htmlFor={`kategori${item.id}`}> {item.nama_kategori} </label>
                             </div>
@@ -200,17 +212,17 @@ export default function Produk() {
 
                     <div className="col-span-9">
                         <div className="grid grid-cols-12 gap-4">
-                            {produk.filter(item => Number(item.kategori_id) === activeKategori).map((item) => (
+                            {filteredProduk.map((item:any) => (
                                 <div className="col-span-6" key={item.id}>
                                     <div className="bg-white shadow-md rounded-lg overflow-hidden">
                                         <img src={`/images/produk/${item.gambar_produk}`} alt={item.nama_produk} className="w-full object-cover" />
                                         <div className="p-4">
                                             <h5 className="font-semibold text-lg">{item.nama_produk}</h5>
                                             <div className="flex flex-wrap gap-3">
-                                                <a href="#" className="inline-block mt-3 px-4 py-2 text-sm border border-blue-500 text-blue-500 rounded hover:bg-blue-500 hover:text-white transition">
+                                                <a href="" className="inline-block mt-3 px-4 py-2 text-sm border border-blue-500 text-blue-500 rounded hover:bg-blue-500 hover:text-white transition">
                                                     Preview
                                                 </a>
-                                                <a href="#" className="inline-block mt-3 px-4 py-2 text-sm bg-orange-500 text-blue-500 rounded hover:bg-blue-500 hover:text-white transition">
+                                                <a href="" className="inline-block mt-3 px-4 py-2 text-sm bg-orange-500 text-blue-500 rounded hover:bg-blue-500 hover:text-white transition">
                                                     Gunakan desain
                                                 </a>
                                             </div>

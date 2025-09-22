@@ -6,7 +6,7 @@ export default function Produk() {
   const [produk, setProduk] = useState<any>([]);
   const [activeKategori, setActiveKategori] = useState(1);
   const filteredProduk = produk.filter(
-    (item) => item.kategori_id === activeKategori
+    (item:any) => item.kategori_id === activeKategori
   );
 
   useEffect(() => {
@@ -38,9 +38,9 @@ export default function Produk() {
   return (
     <>    
         <div className="flex justify-center flex-wrap gap-6 mb-10 mt-10">
-          {kategori.map((item) => (
+          {kategori.map((item:any) => (
             <div key={item.id} onClick={() => setActiveKategori(item.id)} className={`w-[70px] h-[200px] border-2 border-gray-300 flex items-center justify-center cursor-pointer font-semibold transition-all writing-mode-vertical-rl rotate-180 ${
-                activeKategori === item.id
+                activeKategori == item.id
                   ? "bg-orange-500 text-white"
                   : "bg-gray-100 hover:bg-gray-200"
               }`}
@@ -55,7 +55,7 @@ export default function Produk() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 justify-center gap-6">
           {filteredProduk.length > 0 ? (
-            filteredProduk.map((item) => (
+            filteredProduk.map((item:any) => (
               <div key={item.id} className="bg-white shadow-md rounded-lg overflow-hidden mt-7">
                 <img src={`public/images/produk/${item.gambar_produk}`} alt={item.nama_produk} className="w-full object-cover" />
                 <div className="p-4">
