@@ -60,9 +60,14 @@ export default function Produk() {
                 <img src={`public/images/produk/${item.gambar_produk}`} alt={item.nama_produk} className="w-full object-cover" />
                 <div className="p-4">
                   <h5 className="font-semibold text-lg">{item.nama_produk}</h5>
-                  <a href={`/preview/${item.id}`} className="inline-block mt-3 px-4 py-2 text-sm border border-blue-500 text-blue-500 rounded hover:bg-blue-500 hover:text-white transition">
-                    Preview
-                  </a>
+                  <div className="flex flex-wrap gap-2">
+                    <a href={`/preview/${item.id}`} className="inline-block mt-3 px-4 py-2 text-sm border border-blue-500 text-blue-500 rounded hover:bg-blue-500 hover:text-white transition">
+                      Preview
+                    </a>
+                    <a href={`/preview/${item.id}`} className="inline-block mt-3 px-4 py-2 text-sm text-blue-500 rounded hover:bg-blue-500 bg-orange-500 hover:text-white transition">
+                      Gunakan desain
+                    </a>
+                  </div>
                 </div>
               </div>
             ))
