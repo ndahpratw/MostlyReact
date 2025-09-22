@@ -1,5 +1,7 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import LoginForm from "../components/pages/homepage/ui/LoginForm";
+import RegisterForm from "../components/pages/homepage/ui/RegisterForm";
 import Modal from "../components/pages/homepage/ui/modal";
 import Profil from "../components/pages/homepage/profil";
 import Layanan from "../components/pages/homepage/layanan";
@@ -7,8 +9,10 @@ import Produk from "../components/pages/homepage/produk";
 import Testimoni from "../components/pages/homepage/testimoni";
 
 import { FcGoogle } from "react-icons/fc";
+import toast from "react-hot-toast";
 import { IoIosArrowDown } from "react-icons/io";
 import { FaWhatsapp, FaEnvelope, FaInstagram, FaTiktok, FaYoutube } from "react-icons/fa";
+import { useLocalStorage } from "@uidotdev/usehooks";
 
 const tampilkanModalLogin = (setModalLogin: any) => {
   setModalLogin(true);
@@ -20,6 +24,8 @@ const tampilkanModalLogin = (setModalLogin: any) => {
 export function Welcome() {
   const [modalLogin, setModalLogin] = useState(false);
   const [modalRegister, setModalRegister] = useState(false);
+  const [accessToken, setAccessToken] = useLocalStorage<string | null>("accessToken", null);
+
   const [accordionItems, setAccordionItems] = useState<any>([]);
   const [activeAccordion, setActiveAccordion] = useState("layanan1");
   const [accordionKontak, setAccordionKontak] = useState<any>([]);
@@ -49,135 +55,40 @@ export function Welcome() {
     fetchKontak();
   }, []);
 
+  const checkUser = async () => {
+    if (!accessToken) {
+      toast.error("You need to login first");
+      return;
+    }
+
+    try {
+      const response = await axios.get("http://localhost:3000/user", {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      console.log("User data:", response.data);
+      toast.success("User data fetched successfully");
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+      toast.error("Failed to fetch user data");
+    }
+  }
+
+  const handleLogout = async () => {
+    setAccessToken(null);
+    toast.success("Logged out successfully");
+  }
+
   return (
     <main>
       {/* Modal */}
       <Modal show={modalLogin} setter={setModalLogin} modalName="Modal Login">
-        <div className="form font-poppins">
-          <h1 className="font-extrabold text-center mb-4 mt-2">
-            <span className="text-blue-500 text-[20px]">Mostly</span>
-            <span className="text-orange-500 text-[20px]">Web</span>
-          </h1>
-
-          <form action="" className="grid gap-4">
-            <p className="text-blue-500 font-semibold">
-              Silahkan Masukan Akun Anda
-            </p>
-            <div className="grid gap-4">
-              <div className="w-full">
-                <input
-                  type="email"
-                  className="w-full shadow-md py-2 px-2 rounded-lg"
-                  name=""
-                  id=""
-                  placeholder="Email"
-                />
-              </div>
-              <div className="w-full">
-                <input
-                  type="password"
-                  className="w-full shadow-md py-2 px-2 rounded-lg"
-                  name=""
-                  id=""
-                  placeholder="Password"
-                />
-              </div>
-            </div>
-            <button className="bg-blue-500 text-white font-semibold py-2 px-2 rounded-lg mt-4 mb-4 hover:bg-orange-500 hover:text-black">
-              Masuk
-            </button>
-            <p className="text-blue-500 font-semibold">Atau Masuk Dengan</p>
-            <button className="w-full shadow-md text-white mx-auto rounded-md flex justify-center items-center py-2">
-              <FcGoogle size={24} />
-            </button>
-            <p className="text-blue-500 mt-4 font-semibold">
-              Belum memiliki akun? Silahkan{" "}
-              <a
-                onClick={() => {
-                  setModalLogin(false);
-                  setModalRegister(true);
-                }}
-                className="text-orange-500 hover:text-blue-500"
-                href="#"
-              >
-                Daftar Akun
-              </a>
-            </p>
-          </form>
-        </div>
+        <LoginForm setModalLogin={setModalLogin} setModalRegister={setModalRegister} />
       </Modal>
 
       <Modal show={modalRegister} setter={setModalRegister} modalName="Modal Register">
-        <div className="form font-poppins">
-          <h1 className="font-extrabold text-center mb-4 mt-2">
-            <span className="text-blue-500 text-[20px]">Mostly</span>
-            <span className="text-orange-500 text-[20px]">Web</span>
-          </h1>
-
-          <form action="" className="grid gap-4">
-            <p className="text-blue-500 font-semibold">
-              Silahkan Daftarkan Akun Anda
-            </p>
-            <div className="grid gap-4">
-              <div className="w-full">
-                <input
-                  type="text"
-                  className="w-full shadow-md py-2 px-2 rounded-lg"
-                  name=""
-                  id=""
-                  placeholder="Nama"
-                />
-              </div>
-              <div className="w-full">
-                <input
-                  type="text"
-                  className="w-full shadow-md py-2 px-2 rounded-lg"
-                  name=""
-                  id=""
-                  placeholder="No HP"
-                />
-              </div>
-              <div className="w-full">
-                <input
-                  type="email"
-                  className="w-full shadow-md py-2 px-2 rounded-lg"
-                  name=""
-                  id=""
-                  placeholder="Email"
-                />
-              </div>
-              <div className="w-full">
-                <input
-                  type="password"
-                  className="w-full shadow-md py-2 px-2 rounded-lg"
-                  name=""
-                  id=""
-                  placeholder="Password"
-                />
-              </div>
-            </div>
-            <button className="bg-blue-500 text-white font-semibold py-2 px-2 rounded-lg mt-4 mb-4 hover:bg-orange-500 hover:text-black">
-              Daftar
-            </button>
-            <p className="text-blue-500 font-semibold">Atau Daftar Dengan</p>
-            <button className="w-full shadow-md text-white mx-auto rounded-md flex justify-center items-center py-2">
-              <FcGoogle size={24} />
-            </button>
-            <p className="text-blue-500 mt-4 font-semibold">
-              Sudah memiliki akun? Silahkan{" "}
-              <a
-                onClick={() => {
-                  setModalLogin(true);
-                  setModalRegister(false);
-                }}
-                className="text-orange-500 hover:text-blue-500"
-                href="#"
-              >
-                Masuk
-              </a>
-            </p>
-          </form>
-        </div>
+        <RegisterForm setModalLogin={setModalLogin} setModalRegister={setModalRegister} />
       </Modal>
 
       <div className="bg-light-500 min-h-screen font-poppins">
@@ -188,7 +99,7 @@ export function Welcome() {
         {/* Navbar */}
         <nav className="px-20 py-2 flex items-center justify-between">
           <div className="flex items-center">
-            <img src="../../public/images/logo.png" alt="Logo" className="w-24" />
+            <img src="public/images/logo.png" alt="Logo" className="w-24" />
           </div>
 
           <ul className="flex space-x-10 font-bold text-blue-500">
@@ -220,17 +131,36 @@ export function Welcome() {
           </ul>
 
           <div className="space-x-3">
+            {
+              accessToken ?
+                <button
+                  onClick={handleLogout}
+                  className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-orange-500 font-bold"
+                >
+                  Logout
+                </button>
+                :
+                <>
+                  <button
+                    onClick={() => tampilkanModalLogin(setModalLogin)}
+                    className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-orange-500 font-bold"
+                  >
+                    Login
+                  </button>
+                  <button
+                    onClick={() => tampilkanModalLogin(setModalRegister)}
+                    className="px-4 py-2 border border-blue-500 bg-transparent text-blue-500 rounded-lg font-bold hover:bg-blue-500 hover:text-white"
+                  >
+                    Register
+                  </button>
+                </>
+            }
+
             <button
-              onClick={() => tampilkanModalLogin(setModalLogin)}
-              className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-orange-500 font-bold"
-            >
-              Login
-            </button>
-            <button
-              onClick={() => tampilkanModalLogin(setModalRegister)}
+              onClick={checkUser}
               className="px-4 py-2 border border-blue-500 bg-transparent text-blue-500 rounded-lg font-bold hover:bg-blue-500 hover:text-white"
             >
-              Register
+              Check User
             </button>
           </div>
         </nav>
