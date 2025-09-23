@@ -13,7 +13,7 @@ export default function LoginForm({ setModalLogin, setModalRegister }: { setModa
         e.preventDefault();
         // handle login logic here
         try {
-            const response = await axios.post("https://f2b1d437f676.ngrok-free.app/api/login", {
+            const response = await axios.post("http://127.0.0.1:8000/api/login", {
                 email,
                 password,
             })

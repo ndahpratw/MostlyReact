@@ -17,7 +17,7 @@ export default function RegisterForm({ setModalLogin, setModalRegister }: { setM
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            const response = await axios.post("https://f2b1d437f676.ngrok-free.app/api/register", registerForm);
+            const response = await axios.post("http://127.0.0.1:8000/api/register", registerForm);
             console.log(response.data);
             toast.success("Registration successful!");
 

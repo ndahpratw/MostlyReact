@@ -1,30 +1,16 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import LoginForm from "../components/pages/homepage/ui/LoginForm";
-import RegisterForm from "../components/pages/homepage/ui/RegisterForm";
-import Modal from "../components/pages/homepage/ui/modal";
+import Navbar from "../components/layout/navbar";
+import Footer from "../components/layout/footer";
 import Profil from "../components/pages/homepage/profil";
 import Layanan from "../components/pages/homepage/layanan";
 import Produk from "../components/pages/homepage/produk";
 import Testimoni from "../components/pages/homepage/testimoni";
-
-import { FcGoogle } from "react-icons/fc";
-import toast from "react-hot-toast";
 import { IoIosArrowDown } from "react-icons/io";
-import { FaWhatsapp, FaEnvelope, FaInstagram, FaTiktok, FaYoutube } from "react-icons/fa";
-import { useLocalStorage } from "@uidotdev/usehooks";
-
-const tampilkanModalLogin = (setModalLogin: any) => {
-  setModalLogin(true);
-};
-
-
-
 
 export function Welcome() {
   const [modalLogin, setModalLogin] = useState(false);
   const [modalRegister, setModalRegister] = useState(false);
-  const [accessToken, setAccessToken] = useLocalStorage<string | null>("accessToken", null);
 
   const [accordionItems, setAccordionItems] = useState<any>([]);
   const [activeAccordion, setActiveAccordion] = useState("layanan1");
@@ -55,41 +41,10 @@ export function Welcome() {
     fetchKontak();
   }, []);
 
-  const checkUser = async () => {
-    if (!accessToken) {
-      toast.error("You need to login first");
-      return;
-    }
-
-    try {
-      const response = await axios.get("http://localhost:3000/user", {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-      console.log("User data:", response.data);
-      toast.success("User data fetched successfully");
-    } catch (error) {
-      console.error("Error fetching user data:", error);
-      toast.error("Failed to fetch user data");
-    }
-  }
-
-  const handleLogout = async () => {
-    setAccessToken(null);
-    toast.success("Logged out successfully");
-  }
 
   return (
     <main>
       {/* Modal */}
-      <Modal show={modalLogin} setter={setModalLogin} modalName="Modal Login">
-        <LoginForm setModalLogin={setModalLogin} setModalRegister={setModalRegister} />
-      </Modal>
-
-      <Modal show={modalRegister} setter={setModalRegister} modalName="Modal Register">
-        <RegisterForm setModalLogin={setModalLogin} setModalRegister={setModalRegister} />
-      </Modal>
 
       <div className="bg-light-500 min-h-screen font-poppins">
         <div className="absolute bottom-0 right-15 w-[600px]">
@@ -97,73 +52,7 @@ export function Welcome() {
         </div>
 
         {/* Navbar */}
-        <nav className="px-20 py-2 flex items-center justify-between">
-          <div className="flex items-center">
-            <img src="public/images/logo.png" alt="Logo" className="w-24" />
-          </div>
-
-          <ul className="flex space-x-10 font-bold text-blue-500">
-            <li>
-              <a href="#" className="text-blue-500">
-                Home
-              </a>
-            </li>
-            <li>
-              <a href="#" className="text-blue-500">
-                Profil
-              </a>
-            </li>
-            <li>
-              <a href="#" className="text-blue-500">
-                Layanan
-              </a>
-            </li>
-            <li>
-              <a href="#" className="text-blue-500">
-                Produk
-              </a>
-            </li>
-            <li>
-              <a href="#" className="text-blue-500">
-                Kontak
-              </a>
-            </li>
-          </ul>
-
-          <div className="space-x-3">
-            {
-              accessToken ?
-                <button
-                  onClick={handleLogout}
-                  className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-orange-500 font-bold"
-                >
-                  Logout
-                </button>
-                :
-                <>
-                  <button
-                    onClick={() => tampilkanModalLogin(setModalLogin)}
-                    className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-orange-500 font-bold"
-                  >
-                    Login
-                  </button>
-                  <button
-                    onClick={() => tampilkanModalLogin(setModalRegister)}
-                    className="px-4 py-2 border border-blue-500 bg-transparent text-blue-500 rounded-lg font-bold hover:bg-blue-500 hover:text-white"
-                  >
-                    Register
-                  </button>
-                </>
-            }
-
-            <button
-              onClick={checkUser}
-              className="px-4 py-2 border border-blue-500 bg-transparent text-blue-500 rounded-lg font-bold hover:bg-blue-500 hover:text-white"
-            >
-              Check User
-            </button>
-          </div>
-        </nav>
+        <Navbar modalLogin={modalLogin} setModalLogin={setModalLogin} modalRegister={modalRegister} setModalRegister={setModalRegister}/>
 
         {/* Hero */}
         <section className="w-4/5 mx-auto mt-20">
@@ -431,35 +320,7 @@ export function Welcome() {
         </section>
 
         {/* Footer */}
-        <footer className="bg-oraneg-500 text-dark">
-          <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between px-6 py-4">
-            <div className="mb-4 md:mb-0">
-              <img src="/images/logo.png" alt="Logo" className="h-12 mx-auto md:mx-0" />
-            </div>
-
-            <div className="flex space-x-5 text-xl">
-              <a href="https://wa.me/62XXXXXXXXXX" target="_blank" className="hover:text-green-500 transition">
-                <FaWhatsapp />
-              </a>
-              <a href="mailto:yourmail@gmail.com" className="hover:text-red-500 transition">
-                <FaEnvelope />
-              </a>
-              <a href="https://instagram.com/yourusername" target="_blank" className="hover:text-pink-500 transition">
-                <FaInstagram />
-              </a>
-              <a href="https://tiktok.com/@yourusername" target="_blank" className="hover:text-black transition">
-                <FaTiktok />
-              </a>
-              <a href="https://youtube.com/yourchannel" target="_blank" className="hover:text-red-600 transition">
-                <FaYoutube />
-              </a>
-            </div>
-          </div>
-
-          <div className="border-t border-gray-400 py-3 text-center text-sm text-dark">
-            &copy; 2025 <span className="font-semibold">MostlyWeb</span>. All rights reserved.
-          </div>
-        </footer>
+        <Footer></Footer>
       </div>
     </main>
   );
