@@ -1,6 +1,48 @@
 import Sidebar from "../../layout/sidebar";
+import axios from "axios";
+import { useEffect, useState } from "react";
+import pkg from "lodash";
+import { data, useSearchParams } from "react-router";
+const { debounce } = pkg;
+
+const getTransactions = async (data: any) => {
+  try {
+    const baseUrl = 'http://localhost:8000/api/transactions';
+    const params = new URLSearchParams();
+    if (data?.page) {
+      params.append('page', data.page);
+    }
+    const perPage = data.perPage ? data.perPage : 2;
+    params.append('per_page', perPage.toString());
+    if (data?.search) {
+      params.append('search', data.search);
+    }
+    const url = `${baseUrl}?${params.toString()}`;
+    // url = "http://localhost:8000/api/transactions?page=1&per_page=5&search=..."
+    const response = await axios.get(url);
+    data.setData(response.data)
+  } catch (error) {
+    console.error('Error fetching data:', error);
+  }
+}
 
 export default function RiwayatPesanan() {
+
+    const [paginatedData, setPaginatedData] = useState<any>({ data: [], links: [] })
+    const [searchParams, setSearchParams] = useSearchParams();
+
+    useEffect(() => {
+        console.log(searchParams.get('search'))
+        getTransactions({
+        setData: setPaginatedData,
+        search: searchParams.get('search') || ''
+        })
+    }, [])
+
+    const debouncedSearch = debounce((e) => {
+        setSearchParams({ search: e.target.value });
+        getTransactions({ search: e.target.value, setData: setPaginatedData })
+    }, 500);
 
     return (
         <div className="flex h-screen">
@@ -29,113 +71,64 @@ export default function RiwayatPesanan() {
                         
                         <div className="my-3">
                             <div className="bg-white rounded-xl shadow p-6 space-y-6">
-                                <div className="border border-gray-200 rounded p-5">
-                                    <div className="my-4">
-                                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                            <div className="flex justify-center items-center">
-                                            <img src="/images/produk/sampul_bakery.png" alt="Gambar Produk"  className="max-w-full h-auto rounded-lg"/>
-                                            </div>
+                                <input onChange={debouncedSearch} type="text" className="border-2 w-full rounded p-1" placeholder="cari" />
+                                <table className="min-w-full border border-gray-200 rounded-lg overflow-hidden">
+                                    <thead>
+                                        <tr className="bg-gray-100 text-gray-700 text-center">
+                                            <td> Tanggal Transaksi </td>
+                                            <td> Service </td>
+                                            <td> Paket </td>
+                                            <td> Harga </td>
+                                            <td> Status </td>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                            {paginatedData.data.map((item: any, idx: number) => (
+                                            <tr key={idx} className={`text-center ${idx % 2 === 0 ? "bg-white" : "bg-gray-50"} hover:bg-gray-100 transition`}>
+                                                <td className="px-6 py-3 border">{item.tanggal_transaksi}</td>
+                                                <td className="px-6 py-3 border">{item.service_name}</td>
+                                                <td className="px-6 py-3 border">{item.package_name}</td>
+                                                <td className="px-6 py-3 border font-semibold text-gray-800">{item.total_harga}</td>
+                                                <td className="px-6 py-3 border">{item.status}</td>
+                                            </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                    
+                                {/* pagination block */}
+                                <div className="mt-4 flex justify-end space-x-2">
+                                <button
+                                    disabled={paginatedData.current_page == 1}
+                                    onClick={() => getTransactions({ setData: setPaginatedData, search: searchParams.get('search') || '', page: 1 })}
+                                    className={`px-3 py-1 rounded ${paginatedData.current_page == 1 ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'} hover:bg-blue-400 hover:text-white transition`}
+                                >First Page</button>
+                                {
+                                    paginatedData.links.map((link: any, idx: number) => {
+                                    if (idx == 0 || idx == paginatedData.links.length - 1) {
+                                        return null;
+                                    }
 
-                                            <div className="md:col-span-2">
-                                            <div className="overflow-x-auto">
-                                                <table className="table-auto w-full text-left border-collapse">
-                                                <tbody className="text-gray-700">
-                                                    <tr>
-                                                    <td className="py-1 pr-2 font-medium">Tanggal Pesan</td>
-                                                    <td className="py-1 pr-2">:</td>
-                                                    <td className="py-1">24 September 2025</td>
-                                                    </tr>
-                                                    <tr>
-                                                    <td className="py-1 pr-2 font-medium">Jenis Paket</td>
-                                                    <td className="py-1 pr-2">:</td>
-                                                    <td className="py-1">Premium</td>
-                                                    </tr>
-                                                    <tr>
-                                                    <td className="py-1 pr-2 font-medium">Jenis Desain</td>
-                                                    <td className="py-1 pr-2">:</td>
-                                                    <td className="py-1">Custom</td>
-                                                    </tr>
-                                                </tbody>
-                                                </table>
-                                            </div>
-                                            </div>
-                                        </div>
-
-                                        <hr className="my-6 border-gray-300"/>
-
-                                        <div className="flex justify-center">
-                                            <a href="#"
-                                            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">
-                                            Ulasan
-                                            </a>
-                                        </div>
-
-                                        <p className="text-gray-800 mt-4">
-                                            <b>Ulasan anda</b> :
-                                            <span className="text-yellow-400">
-                                            ★★★★☆
-                                            </span>
-                                            <br/>
-                                            Produk sangat bagus dan pengiriman cepat!
-                                        </p>
-                                    </div>
+                                    return (
+                                        <button
+                                        key={idx}
+                                        disabled={link.active}
+                                        onClick={() => getTransactions({ setData: setPaginatedData, search: searchParams.get('search') || '', page: link.page })}
+                                        className={`px-3 py-1 rounded ${link.active ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'} hover:bg-blue-400 hover:text-white transition`}
+                                        dangerouslySetInnerHTML={{ __html: link.label }}
+                                        ></button>
+                                    )
+                                    }
+                                    )
+                                }
+                                <button
+                                    disabled={paginatedData.current_page == paginatedData.last_page}
+                                    onClick={() => getTransactions({ setData: setPaginatedData, search: searchParams.get('search') || '', page: paginatedData.last_page })}
+                                    className={`px-3 py-1 rounded ${paginatedData.current_page == paginatedData.last_page ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-700'} hover:bg-blue-400 hover:text-white transition`}
+                                >Last Page</button>
                                 </div>
 
-                                <div className="border border-gray-200 rounded p-5">
-                                    <div className="my-4">
-                                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                                            <div className="flex justify-center items-center">
-                                            <img src="/images/produk/sampul_bakery.png" alt="Gambar Produk"  className="max-w-full h-auto rounded-lg"/>
-                                            </div>
-
-                                            <div className="md:col-span-2">
-                                            <div className="overflow-x-auto">
-                                                <table className="table-auto w-full text-left border-collapse">
-                                                <tbody className="text-gray-700">
-                                                    <tr>
-                                                    <td className="py-1 pr-2 font-medium">Tanggal Pesan</td>
-                                                    <td className="py-1 pr-2">:</td>
-                                                    <td className="py-1">24 September 2025</td>
-                                                    </tr>
-                                                    <tr>
-                                                    <td className="py-1 pr-2 font-medium">Jenis Paket</td>
-                                                    <td className="py-1 pr-2">:</td>
-                                                    <td className="py-1">Premium</td>
-                                                    </tr>
-                                                    <tr>
-                                                    <td className="py-1 pr-2 font-medium">Jenis Desain</td>
-                                                    <td className="py-1 pr-2">:</td>
-                                                    <td className="py-1">Custom</td>
-                                                    </tr>
-                                                </tbody>
-                                                </table>
-                                            </div>
-                                            </div>
-                                        </div>
-
-                                        <hr className="my-6 border-gray-300"/>
-
-                                        <div className="flex justify-center">
-                                            <a href="#"
-                                            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">
-                                            Ulasan
-                                            </a>
-                                        </div>
-
-                                        <p className="text-gray-800 mt-4">
-                                            <b>Ulasan anda</b> :
-                                            <span className="text-yellow-400">
-                                            ★★★★☆
-                                            </span>
-                                            <br/>
-                                            Produk sangat bagus dan pengiriman cepat!
-                                        </p>
-                                    </div>
-                                </div>
                             </div>
-                        </div>
-
-
+                       </div>
                     </div>
                 </main>
             </div>
